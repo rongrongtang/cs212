@@ -1,29 +1,41 @@
+"""In this case,I fix the start=0 and end=y.
+It can't work if end is large. I change a thought
+that search start and end  rather than fix them."""
+
+def searchBon(f,y):
+    x=1
+    while(f(x)<y):
+        x*=2
+    return 0 if x==1 else x/2
+
+def binSearch(f,y,det=1/1024):
+    start=searchBon(f,y)
+    end=2*start if start!=0 else 1    
+    while(start<=end):
+        mid=(start+end)/2
+        if(f(mid)==y):
+            return mid
+        elif(f(mid)>y):
+            end=mid-det
+        else:
+            start=mid+det
+    return start if abs(f(start)-y)<abs(f(end)-y) else end
+
+
+def inverse(f):
+    def _f(y):
+        return binSearch(f,y)
+    return _f
+
 def square(x):
     return x*x
 
 def power10(x):
     return 10**x
 
-def inverse(f,det=1/1024):
-    def _f(y):
-        start=0
-        end=y
-        while(start<=end):
-            mid=(start+end)/2
-            if(y==f(mid)):
-               return mid
-            elif(y<f(mid)):
-                end=mid-det
-            else:
-                start=mid+det        
-        return start if abs(f(start)-y)<abs(f(end)-y) else end
-    return _f
-
-sqrt=inverse(square)
-log10=inverse(power10)
 cuberoot=inverse(lambda x:x*x*x)
-
-
+log10=inverse(power10)
+sqrt=inverse(square)
 
 def test():
     import math
